@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   List<Transaction> transactions;
-
-  TransactionList(this.transactions);
+  Function deleteTransactions;
+  TransactionList(this.transactions, this.deleteTransactions);
 
   @override
   Widget build(BuildContext context) {
@@ -30,38 +30,67 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
-                    child: Row(
-                  children: [
-                    Container(
-                      child: Text(
-                          '\$${transactions[index].amount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Theme.of(context).primaryColor)),
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).primaryColor, width: 2)),
-                      padding: EdgeInsets.all(10),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          transactions[index].name,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                  elevation: 5,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FittedBox(
+                          child: Text(
+                              '\$${transactions[index].amount.toStringAsFixed(2)}'),
                         ),
-                        Text(
-                          DateFormat.yMMMEd().format(transactions[index].date),
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    )
-                  ],
-                ));
+                      ),
+                      radius: 30,
+                    ),
+                    title: Text(
+                      '${transactions[index].name}',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                        DateFormat.yMMMEd().format(transactions[index].date)),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                      onPressed: () {
+                        deleteTransactions(transactions[index].id);
+                      },
+                    ),
+                  ),
+                );
+                // return Card(
+                //     child: Row(
+                //   children: [
+                //     Container(
+                //       child: Text(
+                //           '\$${transactions[index].amount.toStringAsFixed(2)}',
+                //           style: TextStyle(
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 20,
+                //               color: Theme.of(context).primaryColor)),
+                //       margin:
+                //           EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                //       decoration: BoxDecoration(
+                //           border: Border.all(
+                //               color: Theme.of(context).primaryColor, width: 2)),
+                //       padding: EdgeInsets.all(10),
+                //     ),
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Text(
+                //           transactions[index].name,
+                //           style: TextStyle(
+                //               fontSize: 16, fontWeight: FontWeight.bold),
+                //         ),
+                //         Text(
+                //           DateFormat.yMMMEd().format(transactions[index].date),
+                //           style: TextStyle(color: Colors.grey),
+                //         )
+                //       ],
+                //     )
+                //   ],
+                // ));
               },
               itemCount: transactions.length,
             ),

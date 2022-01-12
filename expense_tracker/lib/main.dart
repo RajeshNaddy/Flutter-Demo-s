@@ -13,15 +13,16 @@ import './widgets/chart.dart';
 void main() {
   runApp(MaterialApp(
     theme: ThemeData(
-      textTheme: ThemeData.light().textTheme.copyWith(
-          headline6: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 18)),
-      primarySwatch: Colors.purple,
-      accentColor: Colors.amber,
-      fontFamily: 'Quicksand',
-    ),
+        textTheme: ThemeData.light().textTheme.copyWith(
+            headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+            button: TextStyle(color: Colors.white)),
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        errorColor: Colors.red),
     home: MyApp(),
   ));
 }
@@ -39,12 +40,12 @@ class _MyAppState extends State<MyApp> {
     // Transaction(id: 'id2', name: "Socks", amount: 12.0, date: DateTime.now())
   ];
 
-  void _addNewTransactions(String name, double amount) {
+  void _addNewTransactions(String name, double amount, DateTime dateSelected) {
     final Transaction newTxn = Transaction(
         id: DateTime.now().toString(),
         name: name,
         amount: amount,
-        date: DateTime.now());
+        date: dateSelected);
     //userTransactions.add(newTxn);
 
     setState(() {
@@ -52,8 +53,31 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void deleteTransactions(String id) {
+    setState(() {
+      userTransactions.removeWhere((element) {
+        return element.id == id;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      actions: [
+        IconButton(
+            onPressed: () {
+              startAddNewTransactions(context);
+            },
+            icon: Icon(Icons.add))
+      ],
+      title: const Text(
+        'Expense tracker',
+        style: TextStyle(
+            fontFamily: 'OpenSans', fontWeight: FontWeight.bold, fontSize: 20),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -62,27 +86,22 @@ class _MyAppState extends State<MyApp> {
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                startAddNewTransactions(context);
-              },
-              icon: Icon(Icons.add))
-        ],
-        title: const Text(
-          'Expense tracker',
-          style: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 20),
-        ),
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Chart(_recentTransactions),
-            TransactionList(userTransactions)
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.4,
+                child: Chart(_recentTransactions)),
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.6,
+                child: TransactionList(userTransactions, deleteTransactions))
           ],
         ),
       ),
