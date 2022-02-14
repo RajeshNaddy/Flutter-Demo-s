@@ -39,11 +39,29 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   List<Transaction> userTransactions = [
     // Transaction(id: 'id1', name: "Shoes", amount: 99.0, date: DateTime.now()),
     // Transaction(id: 'id2', name: "Socks", amount: 12.0, date: DateTime.now())
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print(state);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   void _addNewTransactions(String name, double amount, DateTime dateSelected) {
     final Transaction newTxn = Transaction(
