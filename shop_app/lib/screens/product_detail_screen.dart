@@ -9,12 +9,28 @@ class ProductDetailScreen extends StatelessWidget {
     final products = Provider.of<Products>(context, listen: false);
 
     final id = ModalRoute.of(context).settings.arguments as String;
+    final selectedProduct = products.findById(id);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(products.findById(id).title),
+        title: Text(selectedProduct.title),
       ),
-      body: Text(id),
+      body: Column(
+        children: [
+          Image.network(selectedProduct.imageUrl),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            selectedProduct.title,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(selectedProduct.description),
+        ],
+      ),
     );
   }
 }

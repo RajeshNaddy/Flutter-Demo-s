@@ -43,6 +43,11 @@ class Cart with ChangeNotifier {
     _items.remove(key);
     notifyListeners();
   }
+
+  void clear() {
+    _items.clear();
+    notifyListeners();
+  }
 }
 
 class CartItem {
