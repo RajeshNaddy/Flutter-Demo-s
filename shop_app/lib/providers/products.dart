@@ -46,7 +46,12 @@ class Products with ChangeNotifier {
   }
 
   void addProducts(Product value) {
-    //_items.add(value);
+    _items.add(Product(
+        id: DateTime.now().toString(),
+        title: value.title,
+        description: value.description,
+        imageUrl: value.imageUrl,
+        price: value.price));
     notifyListeners();
   }
 
